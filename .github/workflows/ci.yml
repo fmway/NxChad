@@ -1,0 +1,120 @@
+name: "CI"
+on:
+  pull_request:
+  push:
+    branches:
+    - master
+
+permissions:
+  actions: read
+  contents: read
+  pages: write
+  id-token: write
+  deployments: write
+
+jobs:
+  build:
+    needs:
+    - nixos
+    - home-manager
+    - standalone
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: DeterminateSystems/nix-installer-action@v16
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        extra-conf: "experimental-features = nix-command flakes"
+    - uses: cachix/cachix-action@v16
+      with:
+        name: fmcachix
+        extraPullNames: nix-community
+        skipPush: true
+    - name: Build search
+      run: nix build ./dev#search -L
+    - name: Deploy
+      uses: cloudflare/wrangler-action@v3
+      with:
+        apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        command: pages deploy ./result --branch master --project-name=nxchad-options
+        gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+  nixos:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: DeterminateSystems/nix-installer-action@v16
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        extra-conf: "experimental-features = nix-command flakes"
+    - uses: cachix/cachix-action@v16
+      with:
+        name: fmcachix
+        extraPullNames: nix-community
+        skipPush: true
+    - name: build
+      run: nix run nixpkgs#nixos-rebuild -- build --flake ./dev#x86_64
+  # nix-darwin:
+  #   runs-on: macos-latest
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - uses: DeterminateSystems/nix-installer-action@v16
+  #     with:
+  #       github-token: ${{ secrets.GITHUB_TOKEN }}
+  #       extra-conf: "experimental-features = nix-command flakes"
+  #   - uses: cachix/cachix-action@v16
+  #     with:
+  #       name: fmcachix
+  #       extraPullNames: nix-community
+  #       skipPush: true
+  #   - name: build
+  #     run: nix run nix-darwin/master#darwin-rebuild -- build --flake ./dev#aarch64
+  home-manager:
+    strategy:
+      matrix:
+        os:
+        - ubuntu-latest
+        # - macos-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: DeterminateSystems/nix-installer-action@v16
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        extra-conf: "experimental-features = nix-command flakes"
+    - uses: cachix/cachix-action@v16
+      with:
+        name: fmcachix
+        extraPullNames: nix-community
+        skipPush: true
+    - name: Build
+      env:
+        NAME: ${{ matrix.os == 'ubuntu-latest' && 'x86_64-linux' || 'aarch64-darwin' }}
+      run: |
+        nix run github:nix-community/home-manager --override-input nixpkgs nixpkgs -- \
+          build --flake ./dev#${NAME}
+  standalone:
+    strategy:
+      matrix:
+        os: 
+        - ubuntu-latest
+        # - macos-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: DeterminateSystems/nix-installer-action@v16
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        extra-conf: "experimental-features = nix-command flakes"
+    - uses: cachix/cachix-action@v16
+      with:
+        name: fmcachix
+        extraPullNames: nix-community
+        skipPush: true
+    - name: Build
+      run: |
+        nix build ./dev
+        ./result/bin/nvim --version

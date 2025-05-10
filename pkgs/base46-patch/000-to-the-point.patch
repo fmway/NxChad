@@ -1,0 +1,62 @@
+--- a/lua/base46/init.lua	1970-01-01 07:00:01.000000000 +0700
++++ b/lua/base46/init.lua	2025-04-28 19:57:21.094543892 +0700
+@@ -1,7 +1,7 @@
+ local M = {}
+ local g = vim.g
+ local opts = require("nvconfig").base46
+-local cache_path = vim.g.base46_cache
++local cache_path = vim.fn.stdpath "data" .. "/base46/"
+ 
+ local integrations = {
+   "blankline",
+@@ -142,7 +142,7 @@
+ end
+ 
+ M.compile = function()
+-  if not vim.uv.fs_stat(vim.g.base46_cache) then
++  if not vim.uv.fs_stat(cache_path) then
+     vim.fn.mkdir(cache_path, "p")
+   end
+ 
+@@ -165,7 +165,7 @@
+   M.compile()
+ 
+   for _, name in ipairs(integrations) do
+-    dofile(vim.g.base46_cache .. name)
++    dofile(cache_path .. name)
+   end
+ 
+   -- update blankline
+@@ -186,31 +186,19 @@
+   local themes = opts.theme_toggle
+ 
+   if opts.theme ~= themes[1] and opts.theme ~= themes[2] then
+-    vim.notify "Set your current theme to one of those mentioned in the theme_toggle table (chadrc)"
+-    return
++    opts.theme = themes[2]
+   end
+ 
+   g.icon_toggled = not g.icon_toggled
+   g.toggle_theme_icon = g.icon_toggled and "   " or "   "
+ 
+   opts.theme = (themes[1] == opts.theme and themes[2]) or themes[1]
+-
+-  package.loaded.chadrc = nil
+-  local chadrc = require "chadrc"
+-  local old_theme = chadrc.base46.theme
+-
+-  require("nvchad.utils").replace_word('theme = "' .. old_theme, 'theme = "' .. opts.theme)
+   M.load_all_highlights()
+ end
+ 
+ M.toggle_transparency = function()
+   opts.transparency = not opts.transparency
+   M.load_all_highlights()
+-
+-  package.loaded.chadrc = nil
+-  local old = require("chadrc").base46.transparency
+-  local new = "transparency = " .. tostring(opts.transparency)
+-  require("nvchad.utils").replace_word("transparency = " .. tostring(old), new)
+ end
+ 
+ return M
