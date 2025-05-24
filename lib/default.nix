@@ -1,7 +1,7 @@
 { lib, inputs, ... }: let
   generator = { name ? "", args ? [], lua ? "", ... }: ''
     function${lib.optionalString (lib.trim name != "") " ${name}"}(${lib.concatStringsSep ", " args})
-    ${lib.fmway.addIndent "  " lua}
+    ${lib.fmway.addIndent "  " (lib.trim lua)}
     end
   '';
   template = luainline: name: x: let
