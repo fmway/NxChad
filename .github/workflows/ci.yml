@@ -118,3 +118,7 @@ jobs:
       run: |
         nix build ./dev
         ./result/bin/nvim --version
+    # TODO add to readme
+    - name: Get StartupTime
+      run: |
+        ./result/bin/nvim --headless --startuptime /dev/stdout +qall | awk '{$1="" ; print $0}' | grep -E '^ *[0-9]' | sort
