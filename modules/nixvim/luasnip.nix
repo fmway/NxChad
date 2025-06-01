@@ -9,7 +9,7 @@ in { lib, config, ... }:
     lazyLoad.enable = true;
     lazyLoad.settings = {
       event = "InsertEnter";
-      after = mkRawFn /* lua */ ''
+      after = mkRawFn ''
         ${config.plugins.luasnip.luaConfig.content}
         vim.api.nvim_create_autocmd("InsertLeave", {
           callback = function()
@@ -24,14 +24,14 @@ in { lib, config, ... }:
       '';
     };
     fromVscode = [
-      { exclude.__raw = /* lua */ "vim.vscode_snippets_exclude or {}"; }
-      { paths.__raw = /* lua */ "vim.g.vscode_snippets_path or \"\""; }
+      { exclude.__raw = "vim.vscode_snippets_exclude or {}"; }
+      { paths.__raw = "vim.g.vscode_snippets_path or \"\""; }
     ];
     fromSnipmate = [
-      { paths.__raw = /* lua */ "vim.g.snipmate_snippets_path or \"\""; }
+      { paths.__raw = "vim.g.snipmate_snippets_path or \"\""; }
     ];
     fromLua = [
-      { paths.__raw = /* lua */ "vim.g.lua_snippets_path or \"\""; }
+      { paths.__raw = "vim.g.lua_snippets_path or \"\""; }
     ];
     settings = {
       update_events = [ "TextChanged" "TextChangedI" ];

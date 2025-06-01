@@ -12,6 +12,9 @@
         helpers = lib.nixvim;
       };
       base46-patch = pkgs.callPackage ../pkgs/base46-patch {};
+      injections-scm = pkgs.callPackage ../pkgs/injections-scm {
+        inherit inputs;
+      };
     };
 
     nixpkgs.config = {

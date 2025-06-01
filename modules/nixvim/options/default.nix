@@ -61,13 +61,13 @@ in
       --   dofile(vim.g.base46_cache .. v)
       -- end
     '';
-    extraConfigLua = /* lua */ ''
+    extraConfigLua = ''
       -- go to previous/next line with h,l,left arrow and right arrow
       -- when cursor reaches end/beginning of line
       vim.opt.whichwrap:append "<>[]hl"
     '';
 
-    extraConfigLuaPost = /* lua */ ''
+    extraConfigLuaPost = ''
       vim.opt.shortmess:append "sI"
 
       require "nvchad"
@@ -77,7 +77,7 @@ in
       }
     '';
     plugins.telescope = {
-      lazyLoad.settings.before = mkRawFn /* lua */ ''
+      lazyLoad.settings.before = mkRawFn ''
         dofile(vim.g.base46_cache .. "telescope")
       '';
       enabledExtensions = [
@@ -86,39 +86,39 @@ in
       ];
     };
 
-    plugins.gitsigns.lazyLoad.settings.before = mkRawFn /* lua */ ''
+    plugins.gitsigns.lazyLoad.settings.before = mkRawFn ''
       dofile(vim.g.base46_cache .. "git")
     '';
 
-    plugins.indent-blankline.lazyLoad.settings.before = mkRawFn /* lua */ ''
+    plugins.indent-blankline.lazyLoad.settings.before = mkRawFn ''
       dofile(vim.g.base46_cache .. "blankline")
     '';
 
-    plugins.which-key.lazyLoad.settings.before = mkRawFn /* lua */ ''
+    plugins.which-key.lazyLoad.settings.before = mkRawFn ''
       dofile(vim.g.base46_cache .. "whichkey")
     '';
 
     plugins.web-devicons.enable = true;
 
-    plugins.lsp.lazyLoad.settings.before = mkRawFn /* lua */ ''
+    plugins.lsp.lazyLoad.settings.before = mkRawFn ''
       dofile(vim.g.base46_cache .. "lsp")
       require('lz.n').trigger_load('blink.cmp')
       require("nvchad.lsp").diagnostic_config()
     '';
     plugins.lsp.keymaps.extra = [
       (nKeymap' "<leader>ra" {
-        __raw = /* lua */ ''require "nvchad.lsp.renamer"'';
+        __raw = ''require "nvchad.lsp.renamer"'';
       } "NVRenamer")
     ];
 
     plugins.blink-cmp.lazyLoad.settings = {
-      before = mkRawFn /* lua */ ''
+      before = mkRawFn ''
         local lz = require('lz.n')
         lz.trigger_load('nvim-autopairs')
         lz.trigger_load('luasnip')
         lz.trigger_load('blink.compat')
       '';
-      after = mkRawFn /* lua */ ''
+      after = mkRawFn ''
         local default = ${toLuaObject config.plugins.blink-cmp.settings}
         local opts = vim.tbl_deep_extend("force", default, require "nvchad.blink.config")
         require("blink-cmp").setup(opts)
@@ -129,33 +129,33 @@ in
 
       # tabufline
       (nKeymap' "<leader>b" ("<cmd>en" + "ew<CR>") "buffer new")
-      (nKeymap' "<tab>" (mkRawFn /* lua */ ''require("nvchad.tabufline").next()'') "buffer goto next")
-      (nKeymap' "<S-tab>" (mkRawFn /* lua */ ''require("nvchad.tabufline").prev()'') "buffer goto prev")
-      (nKeymap' "<leader>x" (mkRawFn /* lua */ ''require("nvchad.tabufline").close_buffer()'') "buffer close")
-      (nKeymap' "<leader>th" (mkRawFn /* lua */ ''require("nvchad.themes").open()'') "telescope nvchad themes")
+      (nKeymap' "<tab>" (mkRawFn ''require("nvchad.tabufline").next()'') "buffer goto next")
+      (nKeymap' "<S-tab>" (mkRawFn ''require("nvchad.tabufline").prev()'') "buffer goto prev")
+      (nKeymap' "<leader>x" (mkRawFn ''require("nvchad.tabufline").close_buffer()'') "buffer close")
+      (nKeymap' "<leader>th" (mkRawFn ''require("nvchad.themes").open()'') "telescope nvchad themes")
        # new terminals
-      (nKeymap' "<leader>h" (mkRawFn /* lua */ ''require("nvchad.term").new { pos = "sp" }'') "terminal new horizontal term")
-      (nKeymap' "<leader>v" (mkRawFn /* lua */ ''require("nvchad.term").new { pos = "vsp" }'') "terminal new vertical term")
+      (nKeymap' "<leader>h" (mkRawFn ''require("nvchad.term").new { pos = "sp" }'') "terminal new horizontal term")
+      (nKeymap' "<leader>v" (mkRawFn ''require("nvchad.term").new { pos = "vsp" }'') "terminal new vertical term")
 
       # toggleable
       {
         mode = ["n" "t"];
         key = "<A-v>";
-        action = mkRawFn /* lua */ ''
+        action = mkRawFn ''
           require("nvchad.term").toggle { pos = "vsp", id = "vtoggleTerm" }'';
         options.desc = "terminal toggleable vertical term";
       }
       {
         mode = ["n" "t"];
         key = "<A-h>";
-        action = mkRawFn /* lua */ ''
+        action = mkRawFn ''
           require("nvchad.term").toggle { pos = "sp", id = "htoggleTerm" }'';
         options.desc = "terminal toggleable horizontal term";
       }
       {
         mode = ["n" "t"];
         key = "<A-i>";
-        action = mkRawFn /* lua */ ''
+        action = mkRawFn ''
           require("nvchad.term").toggle { pos = "float", id = "floatTerm" }'';
         options.desc = "terminal toggle floating term";
       }

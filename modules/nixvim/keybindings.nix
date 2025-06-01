@@ -55,7 +55,7 @@ in
   ] ++ lib.optionals which-key.enable [
     # whichkey
     (nKeymap' "<leader>wK" "<cmd>WhichKey <CR>" "whichkey all keymaps")
-    (nKeymap' "<leader>wk" (mkRawFn /* lua */ ''
+    (nKeymap' "<leader>wk" (mkRawFn ''
       vim.cmd("WhichKey " .. vim.fn.input "WhichKey: ")
     '') "whichkey query lookup")
   ];

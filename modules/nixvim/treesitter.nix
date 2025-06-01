@@ -1,4 +1,5 @@
-{ lib, ... }:
+{ internal, self, ... }:
+{ lib, pkgs, ... }:
 {
   _file = ./treesitter.nix;
   plugins.treesitter = {
@@ -18,4 +19,7 @@
       cmd = [ "TSInstall" "TSBufEnable" "TSBufDisable" "TSModuleInfo" ];
     };
   };
+
+  # 60 th priority, so user can override using mkForce
+  extraFiles."queries/nix/injections.scm".source = lib.mkOverride 60 self.packages.${pkgs.system}.injections-scm;
 }
