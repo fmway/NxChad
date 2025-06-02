@@ -22,5 +22,6 @@
         inputs'.nixvim.legacyPackages;
       allowUnfree = true;
     };
+    legacyPackages = pkgs;
   };
 }
