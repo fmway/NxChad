@@ -1,6 +1,6 @@
 { internal, lib, ... }:
 let
-  inherit (lib.nixvim) mkRawFn iKeymap' nKeymap' vKeymap' tKeymap';
+  inherit (lib.nixvim) mkRaw mkRawFn iKeymap' nKeymap' vKeymap' tKeymap';
 in
 { config, lib, ... }:
 {

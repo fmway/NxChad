@@ -1,6 +1,6 @@
 { internal, lib, inputs, helpers ? lib.nixvim, ... }:
 let
-  inherit (helpers) mkRawFn toLuaObject nKeymap' ntKeymap';
+  inherit (helpers) mkRawFn toLuaObject nKeymap' ntKeymap' toLuaObject';
 in
 { pkgs, config, lib,... }:
 let
@@ -114,13 +114,13 @@ in
     ];
 
     plugins.blink-cmp.luaConfig.content = lib.mkOverride 60 /* lua */ ''
-      ${toLuaObject config.plugins.blink-cmp.luaConfig.pre}
+      ${toLuaObject' config.plugins.blink-cmp.luaConfig.pre}
       --
       local default = ${toLuaObject config.plugins.blink-cmp.settings}
       local opts = vim.tbl_deep_extend("force", default, require "nvchad.blink.config")
       require("blink-cmp").setup(opts)
       --
-      ${toLuaObject config.plugins.blink-cmp.luaConfig.post}
+      ${toLuaObject' config.plugins.blink-cmp.luaConfig.post}
     '';
 
     plugins.blink-cmp.lazyLoad.settings.before = mkRawFn ''

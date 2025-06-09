@@ -36,6 +36,7 @@ in {
     mkRawFn' = template true;
     mkRawFn = self.mkRawFn' "";
     inherit toKeymaps toKeymaps';
+    toLuaObject' = x: if isNull x then "" else self.toLuaObject x;
   } // genToKeymaps');
   splices = arr:
     if arr == [] then []
