@@ -4,18 +4,6 @@
   plugins.cmp_luasnip.enable = config.plugins.luasnip.enable;
   plugins.luasnip = {
     enable = true;
-    luaConfig.post = ''
-      vim.api.nvim_create_autocmd("InsertLeave", {
-        callback = function()
-          if
-            require("luasnip").session.current_nodes[vim.api.nvim_get_current_buf()]
-            and not require("luasnip").session.jump_active
-          then
-            require("luasnip").unlink_current()
-          end
-        end,
-      })
-    '';
     lazyLoad.enable = true;
     lazyLoad.settings.event = "InsertEnter";
     fromVscode = [

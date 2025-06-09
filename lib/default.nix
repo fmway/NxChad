@@ -28,7 +28,7 @@
         mode = lib.stringToCharacters x;
         inherit desc;
       };
-  }) (lib.splices [ "n" "v" "i" "t" ]));
+  }) (lib.splices [ "n" "v" "i" "t" "x" ]));
 in {
   nixvim = inputs.nixvim.lib.nixvim.extend (self: super: {
     mkLuaFn' = template false;

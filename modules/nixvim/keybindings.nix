@@ -1,6 +1,6 @@
 { internal, lib, ... }:
 let
-  inherit (lib.nixvim) mkRaw mkRawFn iKeymap' nKeymap' vKeymap' tKeymap';
+  inherit (lib.nixvim) mkRaw mkRawFn iKeymap' nKeymap' vKeymap' tKeymap' nxKeymap';
 in
 { config, lib, ... }:
 {
@@ -23,7 +23,7 @@ in
     (nKeymap' "<C-c>" "<cmd>%y+<CR>" "general copy whole file")
     (nKeymap' "<leader>n" "<cmd>set nu!<CR>" "toggle line number")
     (nKeymap' "<leader>rn" "<cmd>set rnu!<CR>" "toggle relative number")
-    (nKeymap' "<leader>fm" (mkRawFn ''require("conform").format { lsp_fallback = true }'') "general format file")
+    (nxKeymap' "<leader>fm" (mkRawFn ''require("conform").format { lsp_fallback = true }'') "general format file")
     (nKeymap' "<leader>ds" (mkRaw "vim.diagnostic.setloclist") "LSP diagnostic loclist")
     
     # terminal
