@@ -103,11 +103,6 @@ in
     plugins.lsp.luaConfig.pre = ''
       dofile(vim.g.base46_cache .. "lsp")
       require("nvchad.lsp").diagnostic_config()
-      vim.api.nvim_create_autocmd("LspAttach", {
-        callback = function(args)
-          M.on_attach(_, args.buf)
-        end,
-      })
     '';
     plugins.lsp.lazyLoad.settings.before = mkRawFn ''
       require('lz.n').trigger_load('blink.cmp')
