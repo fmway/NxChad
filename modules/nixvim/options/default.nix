@@ -1,6 +1,6 @@
 { internal, lib, inputs, helpers ? lib.nixvim, ... }:
 let
-  inherit (helpers) mkRawFn toLuaObject nKeymap';
+  inherit (helpers) mkRawFn toLuaObject nKeymap' ntKeymap';
 in
 { pkgs, config, lib,... }:
 let
@@ -77,7 +77,7 @@ in
       }
     '';
     plugins.telescope = {
-      lazyLoad.settings.before = mkRawFn ''
+      luaConfig.pre = ''
         dofile(vim.g.base46_cache .. "telescope")
       '';
       enabledExtensions = [
@@ -86,22 +86,24 @@ in
       ];
     };
 
-    plugins.gitsigns.lazyLoad.settings.before = mkRawFn ''
+    plugins.gitsigns.luaConfig.pre = ''
       dofile(vim.g.base46_cache .. "git")
     '';
 
-    plugins.indent-blankline.lazyLoad.settings.before = mkRawFn ''
+    plugins.indent-blankline.luaConfig.pre = ''
       dofile(vim.g.base46_cache .. "blankline")
     '';
 
-    plugins.which-key.lazyLoad.settings.before = mkRawFn ''
+    plugins.which-key.luaConfig.pre = ''
       dofile(vim.g.base46_cache .. "whichkey")
     '';
 
     plugins.web-devicons.enable = true;
 
-    plugins.lsp.lazyLoad.settings.before = mkRawFn ''
+    plugins.lsp.luaConfig.pre = ''
       dofile(vim.g.base46_cache .. "lsp")
+    '';
+    plugins.lsp.lazyLoad.settings.before = mkRawFn ''
       require('lz.n').trigger_load('blink.cmp')
       require("nvchad.lsp").diagnostic_config()
     '';
@@ -111,19 +113,22 @@ in
       } "NVRenamer")
     ];
 
-    plugins.blink-cmp.lazyLoad.settings = {
-      before = mkRawFn ''
-        local lz = require('lz.n')
-        lz.trigger_load('nvim-autopairs')
-        lz.trigger_load('luasnip')
-        lz.trigger_load('blink.compat')
-      '';
-      after = mkRawFn ''
-        local default = ${toLuaObject config.plugins.blink-cmp.settings}
-        local opts = vim.tbl_deep_extend("force", default, require "nvchad.blink.config")
-        require("blink-cmp").setup(opts)
-      '';
-    };
+    plugins.blink-cmp.luaConfig.content = lib.mkOverride 60 /* lua */ ''
+      ${toLuaObject config.plugins.blink-cmp.luaConfig.pre}
+      --
+      local default = ${toLuaObject config.plugins.blink-cmp.settings}
+      local opts = vim.tbl_deep_extend("force", default, require "nvchad.blink.config")
+      require("blink-cmp").setup(opts)
+      --
+      ${toLuaObject config.plugins.blink-cmp.luaConfig.post}
+    '';
+
+    plugins.blink-cmp.lazyLoad.settings.before = mkRawFn ''
+      local lz = require('lz.n')
+      lz.trigger_load('nvim-autopairs')
+      lz.trigger_load('luasnip')
+      lz.trigger_load('blink.compat')
+    '';
     keymaps = [
       (nKeymap' "<leader>ch" "<cmd>NvCheatsheet<CR>" "toggle nvcheatsheet")
 
@@ -138,27 +143,9 @@ in
       (nKeymap' "<leader>v" (mkRawFn ''require("nvchad.term").new { pos = "vsp" }'') "terminal new vertical term")
 
       # toggleable
-      {
-        mode = ["n" "t"];
-        key = "<A-v>";
-        action = mkRawFn ''
-          require("nvchad.term").toggle { pos = "vsp", id = "vtoggleTerm" }'';
-        options.desc = "terminal toggleable vertical term";
-      }
-      {
-        mode = ["n" "t"];
-        key = "<A-h>";
-        action = mkRawFn ''
-          require("nvchad.term").toggle { pos = "sp", id = "htoggleTerm" }'';
-        options.desc = "terminal toggleable horizontal term";
-      }
-      {
-        mode = ["n" "t"];
-        key = "<A-i>";
-        action = mkRawFn ''
-          require("nvchad.term").toggle { pos = "float", id = "floatTerm" }'';
-        options.desc = "terminal toggle floating term";
-      }
+      (ntKeymap' "<A-v>" (mkRawFn ''require("nvchad.term").toggle { pos = "vsp", id = "vtoggleTerm" }'') "terminal toggleable vertical term")
+      (ntKeymap' "<A-h>" (mkRawFn ''require("nvchad.term").toggle { pos = "sp", id = "htoggleTerm" }'') "terminal toggleable horizontal term")
+      (ntKeymap' "<A-i>" (mkRawFn ''require("nvchad.term").toggle { pos = "float", id = "floatTerm" }'') "terminal toggle floating term")
     ];
     colorscheme = "nvchad";
   };

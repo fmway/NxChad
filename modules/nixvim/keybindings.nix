@@ -6,12 +6,8 @@ in
 {
   _file = ./keybindings.nix;
   keymaps = with config.plugins; [
-    (nKeymap' "<leader>/" "gcc" "toggle comment" // {
-      options.remap = true;
-    })
-    (vKeymap' "<leader>/" "gc" "toggle comment" // {
-      options.remap = true;
-    })
+    (nKeymap' "<leader>/" "gcc" "toggle comment" // { options.remap = true; })
+    (vKeymap' "<leader>/" "gc" "toggle comment" // { options.remap = true; })
     (iKeymap' "<C-b>" "<ESC>^i" "move beginning of line")
     (iKeymap' "<C-e>" "<End>" "move end of line")
     (iKeymap' "<C-h>" "<Left>" "move left")
@@ -28,9 +24,7 @@ in
     (nKeymap' "<leader>n" "<cmd>set nu!<CR>" "toggle line number")
     (nKeymap' "<leader>rn" "<cmd>set rnu!<CR>" "toggle relative number")
     (nKeymap' "<leader>fm" (mkRawFn ''require("conform").format { lsp_fallback = true }'') "general format file")
-    (nKeymap' "<leader>ds" {
-      __raw = "vim.diagnostic.setloclist";
-    } "LSP diagnostic loclist")
+    (nKeymap' "<leader>ds" (mkRaw "vim.diagnostic.setloclist") "LSP diagnostic loclist")
     
     # terminal
     (tKeymap' "<C-x>" "<C-\\><C-N>" "terminal escape terminal mode")
@@ -55,8 +49,6 @@ in
   ] ++ lib.optionals which-key.enable [
     # whichkey
     (nKeymap' "<leader>wK" "<cmd>WhichKey <CR>" "whichkey all keymaps")
-    (nKeymap' "<leader>wk" (mkRawFn ''
-      vim.cmd("WhichKey " .. vim.fn.input "WhichKey: ")
-    '') "whichkey query lookup")
+    (nKeymap' "<leader>wk" (mkRawFn ''vim.cmd("WhichKey " .. vim.fn.input "WhichKey: ")'') "whichkey query lookup")
   ];
 }
