@@ -13,8 +13,8 @@
   ;
 
   res =
-    # add mkRawFn, mkRawFn', mkLuaFn, mkLuaFn' highlight
-    lib.replaceString "mkRaw" "(mkRaw|(mkRawFn|mkLuaFn)[']?)" ctx
+    # add mkRawFn, mkLuaFn highlight
+    lib.replaceString "mkRaw" "(mkRaw|mkRawFn|mkLuaFn)" ctx
   + lib.concatStrings (map builtins.readFile list-scm)
   ;
 
