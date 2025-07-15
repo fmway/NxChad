@@ -73,7 +73,7 @@
         "type": "github"
       }
     },
-    "fmway-nix": {
+    "fmway-lib": {
       "inputs": {
         "flake-compat": "flake-compat",
         "infuse-nix": "infuse-nix",
@@ -81,16 +81,36 @@
         "read-tree": "read-tree"
       },
       "locked": {
-        "lastModified": 1750128572,
-        "narHash": "sha256-SXeye8S/BvZhiqYd1aUEMypQzkBOKDC5AyAPAizNiTg=",
+        "lastModified": 1752579487,
+        "narHash": "sha256-OM4NKB2Oox6qwgyikXlWhctKxRrZJd1xZENkwDdvLNE=",
         "owner": "fmway",
-        "repo": "fmway.nix",
-        "rev": "6d6649ee0f5beb594f0bb9b7d725278c8b581ede",
+        "repo": "lib",
+        "rev": "fdb057eb832913552e23ed1d1f1e93f12e51b23f",
         "type": "github"
       },
       "original": {
         "owner": "fmway",
-        "repo": "fmway.nix",
+        "repo": "lib",
+        "type": "github"
+      }
+    },
+    "fmway-modules": {
+      "inputs": {
+        "fmway-lib": [
+          "fmway-lib"
+        ]
+      },
+      "locked": {
+        "lastModified": 1752579944,
+        "narHash": "sha256-c2TrnWXTTFkrkWzA3HgODDkWb5kwNhFg61xbRhgxTqY=",
+        "owner": "fmway",
+        "repo": "modules",
+        "rev": "be983ef95940903f0af1d2554731dbe7c92a7248",
+        "type": "github"
+      },
+      "original": {
+        "owner": "fmway",
+        "repo": "modules",
         "type": "github"
       }
     },
@@ -242,7 +262,8 @@
     "root": {
       "inputs": {
         "flake-parts": "flake-parts",
-        "fmway-nix": "fmway-nix",
+        "fmway-lib": "fmway-lib",
+        "fmway-modules": "fmway-modules",
         "nixpkgs": "nixpkgs_2",
         "nixvim": "nixvim",
         "systems": "systems_3"
