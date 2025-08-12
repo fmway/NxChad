@@ -1,28 +1,30 @@
 {
   plugins.nvim-tree = {
     enable = true;
-    filters.dotfiles = false;
-    disableNetrw = true;
-    hijackCursor = true;
-    syncRootWithCwd = true;
-    updateFocusedFile.enable = true;
-    updateFocusedFile.updateRoot = false;
-    view.width = 30;
-    view.preserveWindowProportions = true;
-    renderer = {
-      rootFolderLabel = false;
-      highlightGit = true;
-      indentMarkers.enable = true;
-      icons.glyphs = {
-        default = "󰈚";
-        folder = {
-          default = "";
-          empty = "";
-          emptyOpen = "";
-          open = "";
-          symlink = "";
+    settings = {
+      filters.dotfiles = false;
+      disable_netrw = true;
+      hijack_cursor = true;
+      sync_root_with_cwd = true;
+      update_focused_file.enable = true;
+      update_focused_file.update_root = false;
+      view.width = 30;
+      view.preserve_window_proportions = true;
+      renderer = {
+        root_folder_label = false;
+        highlight_git = true;
+        indent_markers.enable = true;
+        icons.glyphs = {
+          default = "󰈚";
+          folder = {
+            default = "";
+            empty = "";
+            empty_open = "";
+            open = "";
+            symlink = "";
+          };
+          git.unmerged = "";
         };
-        git.unmerged = "";
       };
     };
   };
