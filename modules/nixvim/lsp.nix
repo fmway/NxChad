@@ -10,6 +10,7 @@ in
       enable = true;
       settings = {
         diagnostics.globals = [ "vim" ];
+        runtime.version = "LuaJIT";
         workspace.library = [
           { __raw = ''vim.fn.expand "$VIMRUNTIME/lua"''; }
           "${pkgs.vimPlugins.nvchad-ui}/nvchad_types"
@@ -64,8 +65,14 @@ in
       (str: /* lua */ ''
         vim.tbl_deep_extend("force", {
           on_init = function(client, _)
-            if client.supports_method "textDocument/semanticTokens" then
-              client.server_capabilities.semanticTokensProvider = nil
+            if vim.fn.has "nvim-0.11" ~= 1 then
+              if client.supports_method "textDocument/semanticTokens" then
+                client.server_capabilities.semanticTokensProvider = nil
+              end
+            else
+              if client:supports_method "textDocument/semanticTokens" then
+                client.server_capabilities.semanticTokensProvider = nil
+              end
             end
           end,
           capabilities = ${capabilities}

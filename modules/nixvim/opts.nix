@@ -4,6 +4,7 @@
   opts = {
     laststatus = 3;
     showmode = false;
+    splitkeep = "screen";
     cursorlineopt = "number";
     cursorline = true;
     clipboard = "unnamedplus";

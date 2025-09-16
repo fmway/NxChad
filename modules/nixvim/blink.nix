@@ -21,8 +21,10 @@
           show_in_snippet = true;
           show_on_trigger_character = true;
         };
+        ghost_text.enabled = true;
         documentation.auto_show = true;
         documentation.update_delay_ms = 100;
+        documentation.window.border = "single";
       };
       signature.enabled = true;
 
