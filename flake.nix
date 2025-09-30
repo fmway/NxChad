@@ -16,20 +16,11 @@
     inherit (fmway-lib) lib;
   in lib.mkFlake {
     inherit inputs;
-    specialArgs.lib = lib.optionals (lib.pathIsRegularFile ./lib/default.nix) [
-      (self: super: lib.fmway.doImport ./lib { lib = self; inherit inputs; })
-    ];
+    src = ./.;
   } {
-    imports = let
-        top-level = lib.fmway.genImportsWithDefault ./top-level;
-        modules = { self, config, lib, ... } @v: {
-          flake = lib.fmway.genModules ./modules v;
-        };
-      in lib.optionals (lib.pathIsDirectory ./top-level) top-level
-      ++ lib.optionals (lib.pathIsDirectory ./modules) [ modules ]
-      ++ [
-        # expose lib to flake outputs
-        ({ lib, ... }: { flake = { inherit lib; }; })
-      ];
+    imports = [
+      # expose lib to flake outputs
+      ({ lib, ... }: { flake = { inherit lib; }; })
+    ];
   };
 }
