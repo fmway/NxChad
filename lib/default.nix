@@ -47,7 +47,7 @@
   setsMap = lib.listToAttrs (lib.mapAttrsToList (name: fn: {
     inherit name;
     value = mkFn modes [] op.${name} // {
-      __functor = _: op.${name};
+      __functor = _: setsMap.${name}.n;
     };
   }) op);
 in {
