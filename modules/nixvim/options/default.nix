@@ -1,6 +1,6 @@
 { internal, lib, inputs, helpers ? lib.nixvim, ... }:
 let
-  inherit (helpers) mkRawFn toLuaObject nKeymap' ntKeymap' toLuaObject';
+  inherit (helpers) mkRawFn toLuaObject keymap toLuaObject';
 in
 { pkgs, config, lib,... }:
 let
@@ -108,9 +108,9 @@ in
       require('lz.n').trigger_load('blink.cmp')
     '';
     plugins.lsp.keymaps.extra = [
-      (nKeymap' "<leader>ra" {
+      (keymap.n "<leader>ra" {
         __raw = ''require "nvchad.lsp.renamer"'';
-      } "NVRenamer")
+      } "NVRenamer" {})
     ];
 
     plugins.blink-cmp.luaConfig.content = lib.mkOverride 60 /* lua */ ''
@@ -130,22 +130,22 @@ in
       lz.trigger_load('blink.compat')
     '';
     keymaps = [
-      (nKeymap' "<leader>ch" "<cmd>NvCheatsheet<CR>" "toggle nvcheatsheet")
+      (keymap.n "<leader>ch" "<cmd>NvCheatsheet<CR>" "toggle nvcheatsheet" {})
 
       # tabufline
-      (nKeymap' "<leader>b" ("<cmd>en" + "ew<CR>") "buffer new")
-      (nKeymap' "<tab>" (mkRawFn ''require("nvchad.tabufline").next()'') "buffer goto next")
-      (nKeymap' "<S-tab>" (mkRawFn ''require("nvchad.tabufline").prev()'') "buffer goto prev")
-      (nKeymap' "<leader>x" (mkRawFn ''require("nvchad.tabufline").close_buffer()'') "buffer close")
-      (nKeymap' "<leader>th" (mkRawFn ''require("nvchad.themes").open()'') "telescope nvchad themes")
+      (keymap.n "<leader>b"  ("<cmd>en" + "ew<CR>") "buffer new" {})
+      (keymap.n "<tab>"      (mkRawFn ''require("nvchad.tabufline").next()'') "buffer goto next" {})
+      (keymap.n "<S-tab>"    (mkRawFn ''require("nvchad.tabufline").prev()'') "buffer goto prev" {})
+      (keymap.n "<leader>x"  (mkRawFn ''require("nvchad.tabufline").close_buffer()'') "buffer close" {})
+      (keymap.n "<leader>th" (mkRawFn ''require("nvchad.themes").open()'') "telescope nvchad themes" {})
        # new terminals
-      (nKeymap' "<leader>h" (mkRawFn ''require("nvchad.term").new { pos = "sp" }'') "terminal new horizontal term")
-      (nKeymap' "<leader>v" (mkRawFn ''require("nvchad.term").new { pos = "vsp" }'') "terminal new vertical term")
+      (keymap.n "<leader>h" (mkRawFn ''require("nvchad.term").new { pos = "sp" }'') "terminal new horizontal term" {})
+      (keymap.n "<leader>v" (mkRawFn ''require("nvchad.term").new { pos = "vsp" }'') "terminal new vertical term" {})
 
       # toggleable
-      (ntKeymap' "<A-v>" (mkRawFn ''require("nvchad.term").toggle { pos = "vsp", id = "vtoggleTerm" }'') "terminal toggleable vertical term")
-      (ntKeymap' "<A-h>" (mkRawFn ''require("nvchad.term").toggle { pos = "sp", id = "htoggleTerm" }'') "terminal toggleable horizontal term")
-      (ntKeymap' "<A-i>" (mkRawFn ''require("nvchad.term").toggle { pos = "float", id = "floatTerm" }'') "terminal toggle floating term")
+      (keymap.n.t "<A-v>" (mkRawFn ''require("nvchad.term").toggle { pos = "vsp", id = "vtoggleTerm" }'') "terminal toggleable vertical term" {})
+      (keymap.n.t "<A-h>" (mkRawFn ''require("nvchad.term").toggle { pos = "sp", id = "htoggleTerm" }'') "terminal toggleable horizontal term" {})
+      (keymap.n.t "<A-i>" (mkRawFn ''require("nvchad.term").toggle { pos = "float", id = "floatTerm" }'') "terminal toggle floating term" {})
     ];
     colorscheme = "nvchad";
   };

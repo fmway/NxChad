@@ -1,5 +1,5 @@
 { internal, lib, ... }: let
-  inherit (lib.nixvim) mkRaw mkRawFn nKeymap' nvKeymap' toLuaObject;
+  inherit (lib.nixvim) mkRaw mkRawFn keymap toLuaObject;
 in
 { lib, config, pkgs, ... }:
 {
@@ -37,8 +37,8 @@ in
     };
 
     keymaps.extra = [
-      (nvKeymap' "<leader>ca" (mkRaw "vim.lsp.buf.code_action") "Code action")
-      (nKeymap' "<leader>wl" (mkRawFn ''print(vim.inspect(vim.lsp.buf.list_workspace_folders()))'') "List workspace folders")
+      (keymap.n.v "<leader>ca" (mkRaw "vim.lsp.buf.code_action") "Code action" {})
+      (keymap.n   "<leader>wl" (mkRawFn ''print(vim.inspect(vim.lsp.buf.list_workspace_folders()))'') "List workspace folders" {})
     ];
 
     setupWrappers = let
