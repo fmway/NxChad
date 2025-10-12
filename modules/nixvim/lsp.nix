@@ -41,8 +41,26 @@ in
       (keymap.n   "<leader>wl" (mkRawFn ''print(vim.inspect(vim.lsp.buf.list_workspace_folders()))'') "List workspace folders" {})
     ];
 
-    setupWrappers = let
-      capabilities = toLuaObject {
+    setupWrappers = [
+      (str: /* lua */ ''
+        vim.tbl_deep_extend("force", wrap_lsp_config, ${str})
+      '')
+    ];
+  };
+  extraConfigLua = let
+    wrapConfig = toLuaObject {
+      on_init = mkRawFn ["client" "_"] ''
+        if vim.fn.has "nvim-0.11" ~= 1 then
+          if client.supports_method "textDocument/semanticTokens" then
+            client.server_capabilities.semanticTokensProvider = nil
+          end
+        else
+          if client:supports_method "textDocument/semanticTokens" then
+            client.server_capabilities.semanticTokensProvider = nil
+          end
+        end
+      '';
+      capabilities = {
         textDocument.completion.completionItem = {
           documentationFormat = [ "markdown" "plaintext" ];
           snippetSupport = true;
@@ -61,23 +79,8 @@ in
           };
         };
       };
-    in [
-      (str: /* lua */ ''
-        vim.tbl_deep_extend("force", {
-          on_init = function(client, _)
-            if vim.fn.has "nvim-0.11" ~= 1 then
-              if client.supports_method "textDocument/semanticTokens" then
-                client.server_capabilities.semanticTokensProvider = nil
-              end
-            else
-              if client:supports_method "textDocument/semanticTokens" then
-                client.server_capabilities.semanticTokensProvider = nil
-              end
-            end
-          end,
-          capabilities = ${capabilities}
-        }, ${str})
-      '')
-    ];
-  };
+    };
+  in lib.mkBefore /* lua */ ''
+    local wrap_lsp_config = ${wrapConfig}
+  '';
 }
