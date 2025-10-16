@@ -76,4 +76,10 @@
       };
     };
   };
+  plugins.lsp = lib.mkIf config.plugins.blink-cmp.lazyLoad.enable {
+    capabilities = lib.mkBefore ''
+      -- blink cmp problem
+      require("lz.n").trigger_load("blink.cmp")
+    '';
+  };
 }
