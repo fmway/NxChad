@@ -14,7 +14,7 @@
 
   res =
     # add mkRawFn, mkLuaFn highlight
-    lib.replaceString "mkRaw" "(mkRaw|mkRawFn|mkLuaFn)" ctx
+    lib.replaceStrings ["mkRaw" "__raw"] ["(mkRaw|mkRawFn|mkLuaFn)" "__raw|capabilities"] ctx
   + lib.concatStrings (map builtins.readFile list-scm)
   ;
 

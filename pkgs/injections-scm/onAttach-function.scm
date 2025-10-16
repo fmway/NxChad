@@ -10,6 +10,17 @@
     (indented_string_expression
       ((string_fragment) @injection.content
         (#set! injection.language "lua")))
+    (apply_expression
+      function: (_) @_func
+      argument: [
+        (string_expression
+          ((string_fragment) @injection.content
+            (#set! injection.language "lua")))
+        (indented_string_expression
+          ((string_fragment) @injection.content
+            (#set! injection.language "lua")))
+      ]
+      (#match? @_func "(^|\\.)(mkBefore|mkAfter)$"))
   ]
   (#match? @namespace "^onAttach$")
   (#match? @name "^function$"))
@@ -30,6 +41,17 @@
             (indented_string_expression
               ((string_fragment) @injection.content
                 (#set! injection.language "lua")))
+            (apply_expression
+              function: (_) @_func
+              argument: [
+                (string_expression
+                  ((string_fragment) @injection.content
+                    (#set! injection.language "lua")))
+                (indented_string_expression
+                  ((string_fragment) @injection.content
+                    (#set! injection.language "lua")))
+              ]
+              (#match? @_func "(^|\\.)(mkBefore|mkAfter)$"))
           ]
           (#match? @_nested_path "^function$"))))
   ]
