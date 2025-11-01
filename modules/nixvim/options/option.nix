@@ -30,13 +30,11 @@ in {
           example = ''"catppuccin"'';
         };
         theme_toggle = mkOption {
-          type = let
-            type = types.listOf generated.ThemeName;
-          in type // {
-            name = "list of the 2 string, one of them must be the default theme";
-            check = list: type.check list && lib.length list == 2;
-          };
-          description = "list themes to toggle theme";
+          type =
+            types.addCheck
+              (types.listOf generated.ThemeName)
+              (value: lib.length value == 2);
+          description = "list themes to toggle theme (must be 2 items)";
           apply = value:
             lib.take 2 value;
           default = [ cfg.config.base46.theme cfg.config.base46.second_theme ];
